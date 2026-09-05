@@ -24,14 +24,14 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $admin->id,
             'email' => 'required|email|max:255|unique:users,email,' . $admin->id,
-            'no_whatsapp' => 'nullable|string|max:20',
+            'no_hp' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $admin->name = $validated['name'];
         $admin->username = $validated['username'];
         $admin->email = $validated['email'];
-        $admin->no_whatsapp = $validated['no_whatsapp'] ?? null;
+        $admin->no_hp = $validated['no_hp'] ?? null;
 
         if (!empty($validated['password'])) {
             $admin->password = Hash::make($validated['password']);

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\PublicPengaduanController;
 
+// Controller Admin
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\KegiatanController;
@@ -14,6 +15,11 @@ use App\Http\Controllers\Admin\PengurusController;
 use App\Http\Controllers\Admin\DokumentasiController;
 use App\Http\Controllers\Admin\PengaduanController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\WargaController;
+
+// Controller Warga
+use App\Http\Controllers\Warga\DashboardController as WargaDashboardController;
+use App\Http\Controllers\Warga\PengaduanController as WargaPengaduanController;
 
 // ==========================================
 // ROUTE HALAMAN DEPAN (PUBLIC)
@@ -50,12 +56,18 @@ Route::post('/logout', [LoginController::class, 'logout'])
 
 
 // ==========================================
-// ROUTE DASHBOARD WARGA (Setelah Login Warga)
+// ROUTE DASHBOARD & PENGADUAN WARGA (Setelah Login Warga)
 // ==========================================
-Route::middleware(['auth'])->group(function () {
-    Route::get('/warga/dashboard', function () {
-        return view('warga.dashboard'); // Nanti kita buat file view-nya
-    })->name('warga.dashboard');
+Route::middleware(['auth'])->prefix('warga')->name('warga.')->group(function () {
+    Route::get('/dashboard', [WargaDashboardController::class, 'index'])->name('dashboard');
+
+    // Fitur Pengaduan Warga
+    Route::get('/pengaduan', [WargaPengaduanController::class, 'index'])->name('pengaduan.index');
+    Route::get('/pengaduan/create', [WargaPengaduanController::class, 'create'])->name('pengaduan.create');
+    Route::post('/pengaduan', [WargaPengaduanController::class, 'store'])->name('pengaduan.store');
+    Route::get('/pengaduan/{pengaduan}/edit', [WargaPengaduanController::class, 'edit'])->name('pengaduan.edit');
+    Route::put('/pengaduan/{pengaduan}', [WargaPengaduanController::class, 'update'])->name('pengaduan.update');
+    Route::delete('/pengaduan/{pengaduan}', [WargaPengaduanController::class, 'destroy'])->name('pengaduan.destroy');
 });
 
 
@@ -69,6 +81,14 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
+
+        // Fitur Kelola Warga oleh Admin (Lengkap dengan Edit & Delete)
+        Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
+        Route::get('/warga/create', [WargaController::class, 'create'])->name('warga.create');
+        Route::post('/warga', [WargaController::class, 'store'])->name('warga.store');
+        Route::get('/warga/{warga}/edit', [WargaController::class, 'edit'])->name('warga.edit');
+        Route::put('/warga/{warga}', [WargaController::class, 'update'])->name('warga.update');
+        Route::delete('/warga/{warga}', [WargaController::class, 'destroy'])->name('warga.destroy');
 
         Route::resource('/pengumuman', PengumumanController::class);
 

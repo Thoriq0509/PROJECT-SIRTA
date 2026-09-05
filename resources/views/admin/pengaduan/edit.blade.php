@@ -4,349 +4,230 @@
 
 @section('content')
 
-<div class="sidebar" id="sidebar">
+<div class="mb-4">
 
-    <div class="sidebar-brand">
-
-        <img
-            src="{{ asset('images/logo-sirta.jpg') }}"
-            alt="Logo SIRTA"
-            class="sidebar-logo"
-        >
-
-        <span>SIRTA</span>
-
+    <div class="welcome-title">
+        Edit Pengaduan
     </div>
 
-    <div class="sidebar-menu">
-
-        <div class="menu-title">
-            Menu Utama
-        </div>
-
-        <a href="{{ route('admin.dashboard') }}">
-            <i class="bi bi-grid-1x2-fill"></i>
-            <span>Dashboard</span>
-        </a>
-
-        <a href="{{ route('admin.pengumuman.index') }}">
-            <i class="bi bi-megaphone-fill"></i>
-            <span>Pengumuman</span>
-        </a>
-
-        <a href="{{ route('admin.kegiatan.index') }}">
-            <i class="bi bi-calendar-event-fill"></i>
-            <span>Jadwal Kegiatan</span>
-        </a>
-
-        <a href="{{ route('admin.pengurus.index') }}">
-            <i class="bi bi-people-fill"></i>
-            <span>Data Pengurus</span>
-        </a>
-
-        <a href="{{ route('admin.dokumentasi.index') }}">
-            <i class="bi bi-images"></i>
-            <span>Dokumentasi</span>
-        </a>
-
-        <a href="{{ route('admin.pengaduan.index') }}" class="active">
-            <i class="bi bi-chat-left-text-fill"></i>
-            <span>Pengaduan Warga</span>
-        </a>
-
-        <div class="menu-title mt-4">
-            Pengaturan
-        </div>
-
-        <a href="#">
-            <i class="bi bi-person-circle"></i>
-            <span>Profil Admin</span>
-        </a>
-
-    </div>
-
-    <div class="logout">
-
-        <form action="{{ route('logout') }}" method="POST">
-
-            @csrf
-
-            <button type="submit">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </button>
-
-        </form>
-
+    <div class="welcome-text">
+        Perbarui data pengaduan warga.
     </div>
 
 </div>
 
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+@if($errors->any())
 
-<div class="main-content">
+    <div class="alert alert-danger">
 
-    <div class="topbar">
+        @foreach($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
 
-        <div class="d-flex align-items-center gap-2">
+    </div>
 
-            <button class="mobile-menu" id="mobileMenu">
-                <i class="bi bi-list"></i>
-            </button>
+@endif
 
-            <div class="topbar-title">
-                Edit Pengaduan
-            </div>
+<div class="dashboard-card">
 
-        </div>
+    <div class="dashboard-card-title">
+        Form Edit Pengaduan
+    </div>
 
-        <div class="admin-profile">
+    <form
+        action="{{ route('admin.pengaduan.update', $pengaduan) }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
 
-            <div class="admin-avatar">
-                <i class="bi bi-person-fill"></i>
-            </div>
+        @csrf
+        @method('PUT')
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Bukti Saat Ini
+            </label>
 
             <div>
 
-                <div class="admin-name">
-                    {{ auth()->user()->name }}
-                </div>
+                @if($pengaduan->bukti)
 
-                <div class="admin-role">
-                    {{ ucfirst(auth()->user()->role) }}
-                </div>
+                    @php
+                        $extension = strtolower(
+                            pathinfo($pengaduan->bukti, PATHINFO_EXTENSION)
+                        );
+                    @endphp
+
+                    @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+
+                        <img
+                            src="{{ asset('storage/' . $pengaduan->bukti) }}"
+                            alt="Bukti Pengaduan"
+                            width="120"
+                            height="120"
+                            style="object-fit: cover; border-radius: 10px;"
+                        >
+
+                    @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
+
+                        <video
+                            width="200"
+                            controls
+                            style="border-radius: 10px;"
+                        >
+                            <source src="{{ asset('storage/' . $pengaduan->bukti) }}">
+                        </video>
+
+                    @endif
+
+                @else
+
+                    <div class="text-muted">
+                        Tidak ada bukti.
+                    </div>
+
+                @endif
 
             </div>
 
         </div>
 
-    </div>
+        <div class="mb-3">
 
-    <div class="content">
+            <label for="bukti" class="form-label">
+                Ganti Bukti
+            </label>
+
+            <input
+                type="file"
+                name="bukti"
+                id="bukti"
+                class="form-control"
+                accept="image/*,video/*"
+            >
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="nama_pelapor" class="form-label">
+                Nama Pelapor
+            </label>
+
+            <input
+                type="text"
+                name="nama_pelapor"
+                id="nama_pelapor"
+                class="form-control"
+                value="{{ old('nama_pelapor', $pengaduan->nama_pelapor) }}"
+                required
+            >
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="nomor_hp_pelapor" class="form-label">
+                Nomor HP Pelapor
+            </label>
+
+            <input
+                type="text"
+                name="nomor_hp_pelapor"
+                id="nomor_hp_pelapor"
+                class="form-control"
+                value="{{ old('nomor_hp_pelapor', $pengaduan->nomor_hp_pelapor) }}"
+                required
+            >
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="isi_pengaduan" class="form-label">
+                Isi Pengaduan
+            </label>
+
+            <textarea
+                name="isi_pengaduan"
+                id="isi_pengaduan"
+                class="form-control"
+                rows="5"
+                required
+            >{{ old('isi_pengaduan', $pengaduan->isi_pengaduan) }}</textarea>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="tanggal_pengaduan" class="form-label">
+                Tanggal Pengaduan
+            </label>
+
+            <input
+                type="date"
+                name="tanggal_pengaduan"
+                id="tanggal_pengaduan"
+                class="form-control"
+                value="{{ old('tanggal_pengaduan', $pengaduan->tanggal_pengaduan) }}"
+                required
+            >
+
+        </div>
 
         <div class="mb-4">
 
-            <div class="welcome-title">
-                Edit Pengaduan
-            </div>
+            <label for="status" class="form-label">
+                Status
+            </label>
 
-            <div class="welcome-text">
-                Perbarui data pengaduan warga.
-            </div>
-
-        </div>
-
-        @if($errors->any())
-
-            <div class="alert alert-danger">
-
-                @foreach($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-
-            </div>
-
-        @endif
-
-        <div class="dashboard-card">
-
-            <div class="dashboard-card-title">
-                Form Edit Pengaduan
-            </div>
-
-            <form
-                action="{{ route('admin.pengaduan.update', $pengaduan) }}"
-                method="POST"
-                enctype="multipart/form-data"
+            <select
+                name="status"
+                id="status"
+                class="form-select"
+                required
             >
 
-                @csrf
-                @method('PUT')
+                <option value="diajukan"
+                    {{ old('status', $pengaduan->status) === 'diajukan' ? 'selected' : '' }}>
+                    Diajukan
+                </option>
 
-                <div class="mb-3">
+                <option value="diproses"
+                    {{ old('status', $pengaduan->status) === 'diproses' ? 'selected' : '' }}>
+                    Diproses
+                </option>
 
-                    <label class="form-label">
-                        Bukti Saat Ini
-                    </label>
+                <option value="selesai"
+                    {{ old('status', $pengaduan->status) === 'selesai' ? 'selected' : '' }}>
+                    Selesai
+                </option>
 
-                    <div>
-
-                        @if($pengaduan->bukti)
-
-                            @php
-                                $extension = strtolower(
-                                    pathinfo($pengaduan->bukti, PATHINFO_EXTENSION)
-                                );
-                            @endphp
-
-                            @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
-
-                                <img
-                                    src="{{ asset('storage/' . $pengaduan->bukti) }}"
-                                    alt="Bukti Pengaduan"
-                                    width="120"
-                                    height="120"
-                                    style="object-fit: cover; border-radius: 10px;"
-                                >
-
-                            @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
-
-                                <video
-                                    width="200"
-                                    controls
-                                    style="border-radius: 10px;"
-                                >
-                                    <source src="{{ asset('storage/' . $pengaduan->bukti) }}">
-                                </video>
-
-                            @endif
-
-                        @else
-
-                            <div class="text-muted">
-                                Tidak ada bukti.
-                            </div>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label for="bukti" class="form-label">
-                        Ganti Bukti
-                    </label>
-
-                    <input
-                        type="file"
-                        name="bukti"
-                        id="bukti"
-                        class="form-control"
-                        accept="image/*,video/*"
-                    >
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label for="nama_pelapor" class="form-label">
-                        Nama Pelapor
-                    </label>
-
-                    <input
-                        type="text"
-                        name="nama_pelapor"
-                        id="nama_pelapor"
-                        class="form-control"
-                        value="{{ old('nama_pelapor', $pengaduan->nama_pelapor) }}"
-                        required
-                    >
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label for="nomor_hp_pelapor" class="form-label">
-                        Nomor HP Pelapor
-                    </label>
-
-                    <input
-                        type="text"
-                        name="nomor_hp_pelapor"
-                        id="nomor_hp_pelapor"
-                        class="form-control"
-                        value="{{ old('nomor_hp_pelapor', $pengaduan->nomor_hp_pelapor) }}"
-                        required
-                    >
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label for="isi_pengaduan" class="form-label">
-                        Isi Pengaduan
-                    </label>
-
-                    <textarea
-                        name="isi_pengaduan"
-                        id="isi_pengaduan"
-                        class="form-control"
-                        rows="5"
-                        required
-                    >{{ old('isi_pengaduan', $pengaduan->isi_pengaduan) }}</textarea>
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label for="tanggal_pengaduan" class="form-label">
-                        Tanggal Pengaduan
-                    </label>
-
-                    <input
-                        type="date"
-                        name="tanggal_pengaduan"
-                        id="tanggal_pengaduan"
-                        class="form-control"
-                        value="{{ old('tanggal_pengaduan', $pengaduan->tanggal_pengaduan) }}"
-                        required
-                    >
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label for="status" class="form-label">
-                        Status
-                    </label>
-
-                    <select
-                        name="status"
-                        id="status"
-                        class="form-select"
-                        required
-                    >
-
-                        <option value="belum selesai"
-                            {{ old('status', $pengaduan->status) === 'belum selesai' ? 'selected' : '' }}>
-                            Belum Selesai
-                        </option>
-
-                        <option value="selesai"
-                            {{ old('status', $pengaduan->status) === 'selesai' ? 'selected' : '' }}>
-                            Selesai
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="d-flex gap-2">
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        <i class="bi bi-save"></i>
-                        Simpan Perubahan
-                    </button>
-
-                    <a
-                        href="{{ route('admin.pengaduan.index') }}"
-                        class="btn btn-secondary"
-                    >
-                        Kembali
-                    </a>
-
-                </div>
-
-            </form>
+            </select>
 
         </div>
 
-    </div>
+        <div class="d-flex gap-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-save"></i>
+                Simpan Perubahan
+            </button>
+
+            <a
+                href="{{ route('admin.pengaduan.index') }}"
+                class="btn btn-secondary"
+            >
+                Kembali
+            </a>
+
+        </div>
+
+    </form>
 
 </div>
 

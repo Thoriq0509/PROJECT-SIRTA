@@ -11,10 +11,9 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- CSS Public -->
-    <link rel="stylesheet" href="{{ asset('css/public.css') }}"
+    <link rel="stylesheet" href="{{ asset('css/public.css') }}">
     
     <style>
-        /* Tambahan styling untuk kontrol carousel agar lebih rapi */
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
             background-color: rgba(0, 0, 0, 0.3);
@@ -52,8 +51,8 @@
                     <li class="nav-item"><a class="nav-link" href="#dokumentasi">Galeri</a></li>
                     <li class="nav-item"><a class="nav-link" href="#pengaduan">Pengaduan</a></li>
                     <li class="nav-item ms-lg-2">
-                        <!-- Khusus Login Admin -->
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        <!-- Route Login Admin -->
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                             <i class="bi bi-person-badge"></i> Login Admin
                         </a>
                     </li>
@@ -104,19 +103,15 @@
             <h3 class="section-title fw-bold mb-4">Pengumuman & Informasi</h3>
             
             @php
-                // Logika sesuai permintaan guru:
-                // 1. Status harus 'publish'
-                // 2. Tanggal belum lewat (>= hari ini)
-                // (Catatan: Jika kolom status di database kamu masih kosong/null, kamu bisa tambahkan pengecekan orClause atau isi manual data dummy di DB jadi 'publish')
+                // Filter: Status 'publish' dan Tanggal belum lewat (>= hari ini)
                 $activePengumuman = collect($pengumuman)->filter(function($item) {
-                    $isPublish = isset($item->status) ? $item->status == 'publish' : true; // Fallback true agar tidak kosong total jika kolom belum diisi
+                    $isPublish = isset($item->status) && strtolower($item->status) === 'publish';
                     $isNotExpired = \Carbon\Carbon::parse($item->tanggal)->endOfDay()->isFuture();
                     return $isPublish && $isNotExpired;
                 })->values();
             @endphp
 
             <div class="row g-4">
-                <!-- Tampilkan 4 data pertama -->
                 @forelse($activePengumuman->take(4) as $item)
                     <div class="col-md-6">
                         <div class="card card-custom p-4 h-100 border-start border-4 border-primary shadow-sm">
@@ -135,7 +130,6 @@
                 @endforelse
             </div>
 
-            <!-- Bagian Lihat Selengkapnya (Collapse) untuk Pengumuman -->
             @if($activePengumuman->count() > 4)
                 <div class="collapse" id="collapsePengumuman">
                     <div class="row g-4 mt-1">
@@ -171,11 +165,9 @@
             <h3 class="section-title fw-bold mb-4">Jadwal Kegiatan Warga</h3>
 
             @php
-                // Logika sesuai permintaan guru:
-                // 1. Status harus 'publish' (atau 'akan datang' yang diubah jadi publish)
-                // 2. Tanggal belum lewat
+                // Filter: Status 'publish' dan Tanggal belum lewat (>= hari ini)
                 $activeKegiatan = collect($kegiatan)->filter(function($item) {
-                    $isPublish = isset($item->status) ? $item->status == 'publish' : true;
+                    $isPublish = isset($item->status) && strtolower($item->status) === 'publish';
                     $isNotExpired = \Carbon\Carbon::parse($item->tanggal)->endOfDay()->isFuture();
                     return $isPublish && $isNotExpired;
                 })->values();
@@ -193,7 +185,6 @@
                             </tr>
                         </thead>
                         
-                        <!-- 3 Data Pertama -->
                         <tbody>
                             @forelse($activeKegiatan->take(3) as $item)
                                 <tr>
@@ -207,7 +198,6 @@
                             @endforelse
                         </tbody>
 
-                        <!-- Sisa data di-collapse ("Lihat Selengkapnya") -->
                         @if($activeKegiatan->count() > 3)
                             <tbody class="collapse" id="collapseKegiatan">
                                 @foreach($activeKegiatan->skip(3) as $item)
@@ -235,7 +225,7 @@
 
 
         <!-- ========================================== -->
-        <!-- PENGURUS (DIBUAT CAROUSEL) -->
+        <!-- PENGURUS -->
         <!-- ========================================== -->
         <section id="pengurus" class="mb-5 pt-4">
             <h3 class="section-title fw-bold mb-4">Struktur Pengurus RT/RW</h3>
@@ -243,12 +233,9 @@
             @if(collect($pengurus)->isEmpty())
                 <div class="card p-4 text-center shadow-sm"><p class="text-muted mb-0">Belum ada data pengurus.</p></div>
             @else
-                <!-- Carousel Wrapper -->
                 <div id="carouselPengurus" class="carousel slide pb-5" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        
                         @php
-                            // Memecah data pengurus menjadi 3 item per slide
                             $pengurusChunks = collect($pengurus)->chunk(3);
                         @endphp
 
@@ -274,7 +261,6 @@
                                                 </span>
                                                 <h5 class="fw-bold mb-1">{{ $item->nama_pengurus }}</h5>
 
-                                                <!-- No HP Opsional -->
                                                 @if($item->no_telepon)
                                                     <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $item->no_telepon) }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill mt-auto">
                                                         <i class="bi bi-whatsapp"></i> Hubungi
@@ -290,7 +276,6 @@
                         @endforeach
                     </div>
 
-                    <!-- Carousel Controls -->
                     @if($pengurusChunks->count() > 1)
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselPengurus" data-bs-slide="prev" style="width: 5%;">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -339,7 +324,6 @@
                 @endforelse
             </div>
 
-            <!-- Dokumentasi Collapse -->
             @if(collect($dokumentasi)->count() > 3)
                 <div class="collapse" id="collapseDokumentasi">
                     <div class="row row-cols-1 row-cols-md-3 g-4 mt-1">
@@ -352,7 +336,7 @@
                                             <img src="{{ asset('storage/' . $item->file) }}" class="card-img-top dokumentasi-img" alt="{{ $item->judul_dokumentasi }}" style="height: 200px; object-fit: cover;">
                                         @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
                                             <video class="dokumentasi-video w-100" style="height: 200px; object-fit: cover;" controls>
-                                                <source src="{{ asset('storage/' . $item->file) }}"
+                                                <source src="{{ asset('storage/' . $item->file) }}">
                                             </video>
                                         @endif
                                     @endif
@@ -391,8 +375,8 @@
                         </p>
                         
                         <div>
-                            <!-- Tombol Login Warga -->
-                            <a href="#" class="btn btn-primary btn-lg rounded-pill px-5 py-2 shadow-sm">
+                            <!-- Route Login Warga -->
+                            <a href="{{ route('login.warga') }}" class="btn btn-primary btn-lg rounded-pill px-5 py-2 shadow-sm">
                                 <i class="bi bi-box-arrow-in-right me-2"></i> Login Warga untuk Pengaduan
                             </a>
                         </div>
@@ -400,7 +384,7 @@
                         <div class="mt-4 pt-3 border-top">
                             <p class="text-muted small mb-0">
                                 Belum memiliki akun warga? 
-                                <a href="#" class="fw-bold text-decoration-none">Daftar di sini</a>. 
+                                <a href="{{ route('login.warga') }}" class="fw-bold text-decoration-none">Daftar di sini</a>. 
                                 Akun Anda akan ditinjau dan disetujui oleh Admin.
                             </p>
                         </div>

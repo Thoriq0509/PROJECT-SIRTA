@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class PengaduanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pengaduan = Pengaduan::latest()->get();
+        $query = Pengaduan::latest();
+
+        // Menangkap dan menerapkan filter kategori jika dipilih
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->kategori);
+        }
+
+        $pengaduan = $query->get();
 
         return view('admin.pengaduan.index', compact('pengaduan'));
     }
@@ -29,7 +36,7 @@ class PengaduanController extends Controller
             'nomor_hp_pelapor' => 'required|string|max:20',
             'isi_pengaduan' => 'required|string',
             'tanggal_pengaduan' => 'required|date',
-            'status' => 'required|in:belum selesai,selesai',
+            'status' => 'required|string|in:diajukan,diproses,selesai',
         ]);
 
         if ($request->hasFile('bukti')) {
@@ -56,7 +63,7 @@ class PengaduanController extends Controller
             'nomor_hp_pelapor' => 'required|string|max:20',
             'isi_pengaduan' => 'required|string',
             'tanggal_pengaduan' => 'required|date',
-            'status' => 'required|in:belum selesai,selesai',
+            'status' => 'required|in:diajukan,diproses,selesai',
         ]);
 
         if ($request->hasFile('bukti')) {
