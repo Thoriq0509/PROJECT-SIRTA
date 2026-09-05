@@ -1,0 +1,618 @@
+/* =========================================================
+   SIRTA ADMIN
+   ADMIN.CSS (Fully Responsive)
+========================================================= */
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4f7fb;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #26384d;
+    overflow-x: hidden; /* Mencegah layar tergeser ke samping di Mobile */
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #064a9b;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1040; /* Ditinggikan agar di atas overlay */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+========================================================= */
+
+.sidebar-brand {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+}
+
+.sidebar-brand i {
+    font-size: 28px;
+    margin-right: 10px;
+}
+
+
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
+
+.sidebar-menu {
+    padding: 20px 14px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu .menu-title {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu a i {
+    width: 22px;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+
+.sidebar-menu a.active {
+    background: #0d6efd;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.logout {
+    width: calc(100% - 28px);
+    margin: auto 14px 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.logout a {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px;
+    color: #ffdddd;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.logout a:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+
+.logout a i {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   OVERLAY MOBILE
+========================================================= */
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1035; /* Di bawah sidebar, di atas main content */
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+}
+
+.sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+    height: 75px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5eaf0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.mobile-menu {
+    display: none; /* Disembunyikan secara default di PC */
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #0b2d5c;
+    cursor: pointer;
+}
+
+.topbar-title {
+    color: #0b2d5c;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ADMIN PROFILE
+========================================================= */
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e8f1ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.admin-name {
+    color: #26384d;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-role {
+    color: #8a98a8;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   CONTENT & WELCOME
+========================================================= */
+
+.content {
+    padding: 30px;
+}
+
+.welcome-title {
+    color: #0b2d5c;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.welcome-text {
+    color: #718096;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   STATISTICS CARD
+========================================================= */
+
+.stat-card {
+    height: 100%;
+    min-height: 170px;
+    background: #ffffff;
+    border: 1px solid #e7edf4;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 4px 15px rgba(22, 52, 88, 0.03);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    margin-bottom: 18px;
+}
+
+.icon-blue { background: #e8f1ff; color: #0d6efd; }
+.icon-green { background: #e8f8ef; color: #198754; }
+.icon-orange { background: #fff3df; color: #fd7e14; }
+.icon-red { background: #ffe9e9; color: #dc3545; }
+
+.stat-number {
+    color: #172b4d;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   DASHBOARD CARD & ACTIVITY
+========================================================= */
+
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e7edf4;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(22, 52, 88, 0.03);
+    height: 100%;
+}
+
+.dashboard-card-title {
+    color: #0b2d5c;
+    font-size: 18px;
+    font-weight: 650;
+    margin-bottom: 20px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.activity-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+.activity-title {
+    color: #26384d;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.activity-time {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   QUICK MENU
+========================================================= */
+
+.quick-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: #f8fafc;
+    border-radius: 12px;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+.quick-menu:hover {
+    background: #eaf3ff;
+    color: #0d6efd;
+}
+
+.quick-menu i {
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   DATA PENGURUS
+========================================================= */
+
+.pengurus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.pengurus-card {
+    background: #ffffff;
+    border: 1px solid #e5ebf2;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(22, 52, 88, 0.05);
+    transition: all 0.2s ease;
+}
+
+.pengurus-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(22, 52, 88, 0.10);
+}
+
+.pengurus-photo {
+    width: 100%;
+    height: 190px;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+.pengurus-info { padding: 17px; }
+
+.pengurus-jabatan {
+    display: inline-block;
+    background: #e8f1ff;
+    color: #0d6efd;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 9px;
+}
+
+.pengurus-info h4 {
+    margin: 0 0 14px;
+    color: #123b68;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.pengurus-data { display: flex; flex-direction: column; gap: 9px; }
+.pengurus-data div { display: flex; align-items: center; gap: 9px; color: #718096; font-size: 12px; }
+.pengurus-data i { width: 16px; color: #0d6efd; text-align: center; font-size: 13px; }
+
+.pengurus-actions {
+    display: flex; gap: 8px; padding: 12px 17px;
+    background: #fafbfd; border-top: 1px solid #edf1f5;
+}
+.pengurus-actions .btn {
+    flex: 1; border: none; border-radius: 7px;
+    padding: 7px 10px; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+
+.pengurus-actions .btn-warning { background: #fff3d9; color: #d98900; }
+.pengurus-actions .btn-warning:hover { background: #ffe7b0; }
+.pengurus-actions .btn-danger { background: #ffe7e9; color: #dc3545; }
+.pengurus-actions .btn-danger:hover { background: #ffd4d8; }
+
+
+/* =========================================================
+   RESPONSIVE MEDIA QUERIES (LAYAR LAPTOP, TABLET, MOBILE)
+========================================================= */
+
+/* Untuk Tablet ke bawah (Layar kurang dari 1200px tapi lebih dari 992px) */
+@media (max-width: 1199px) {
+    .pengurus-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* KUNCI RESPONSIVE MOBILE & TABLET KECIL (Kurang dari 992px) */
+@media (max-width: 991.98px) {
+    
+    /* 1. Sembunyikan Sidebar ke luar layar (Kiri) */
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    /* Sidebar akan bergeser masuk saat class 'show' aktif (lewat JS) */
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    /* 2. Karena sidebar hilang, Konten Utama harus memanjang 100% */
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* 3. Munculkan Tombol Garis Tiga (Hamburger Menu) di Topbar */
+    .mobile-menu {
+        display: block;
+    }
+
+    /* 4. Sembunyikan teks nama dan role Admin di Topbar agar tidak sesak */
+    .admin-name, .admin-role {
+        display: none;
+    }
+
+    /* 5. Kurangi Padding agar ruang layar HP lebih lega */
+    .topbar {
+        padding: 0 20px;
+    }
+    .content {
+        padding: 20px 15px;
+    }
+    .welcome-title {
+        font-size: 22px;
+    }
+}
+
+/* Untuk Mobile Murni (Layar HP Kecil kurang dari 768px) */
+@media (max-width: 767px) {
+    .pengurus-grid {
+        grid-template-columns: 1fr; /* Jadi 1 kolom berbaris ke bawah */
+        gap: 16px;
+    }
+
+    .pengurus-photo {
+        height: 210px;
+    }
+}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.logout {
+    padding: 0 20px 20px;
+}
+
+.logout form {
+    margin: 0;
+    padding: 0;
+}
+
+.logout button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: transparent;
+    border: none;
+
+    color: #ffffff;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+
+    padding: 12px 15px;
+
+    cursor: pointer;
+    border-radius: 8px;
+
+    transition: all 0.2s ease;
+}
+
+.logout button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logout button i {
+    font-size: 18px;
+}
+
+.logout button span {
+    display: inline-block;
+}
+
+/* =========================================
+   SIDEBAR LOGO
+========================================= */
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-brand .sidebar-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
