@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
+        'nik',
         'username',
         'email',
         'password',
-        'no_whatsapp',
         'role',
+        'no_hp',
     ];
 
     protected $hidden = [
