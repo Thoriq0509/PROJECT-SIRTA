@@ -83,20 +83,33 @@
             </div>
 
 
-            <div class="mb-3">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="waktu_pelaksanaan" class="form-label">
+                        Jam Mulai
+                    </label>
 
-                <label for="waktu" class="form-label">
-                    Waktu
-                </label>
+                    <input
+                        type="time"
+                        name="waktu_pelaksanaan"
+                        id="waktu_pelaksanaan"
+                        class="form-control"
+                        value="{{ old('waktu_pelaksanaan', $kegiatan->waktu_pelaksanaan) }}"
+                        required>
+                </div>
 
-                <input
-                    type="time"
-                    name="waktu"
-                    id="waktu"
-                    class="form-control"
-                    value="{{ old('waktu', $kegiatan->waktu) }}"
-                    required>
+                <div class="col-md-6 mb-3">
+                    <label for="jam_selesai" class="form-label">
+                        Jam Selesai (Opsional)
+                    </label>
 
+                    <input
+                        type="time"
+                        name="jam_selesai"
+                        id="jam_selesai"
+                        class="form-control"
+                        value="{{ old('jam_selesai', $kegiatan->jam_selesai) }}">
+                </div>
             </div>
 
 
@@ -120,26 +133,33 @@
             <div class="mb-4">
 
                 <label for="status" class="form-label">
-                    Status
+                    Status (Override Sistem)
                 </label>
 
                 <select
                     name="status"
                     id="status"
-                    class="form-select"
-                    required>
+                    class="form-select">
 
-                    <option value="akan datang"
-                        {{ old('status', $kegiatan->status) == 'akan datang' ? 'selected' : '' }}>
-                        Akan Datang
+                    <option value="">-- Otomatis Berdasarkan Sistem --</option>
+                    
+                    <option value="Mendatang"
+                        {{ old('status', $kegiatan->status) == 'Mendatang' ? 'selected' : '' }}>
+                        Paksa: Mendatang
                     </option>
 
-                    <option value="selesai"
-                        {{ old('status', $kegiatan->status) == 'selesai' ? 'selected' : '' }}>
-                        Selesai
+                    <option value="Berlangsung"
+                        {{ old('status', $kegiatan->status) == 'Berlangsung' ? 'selected' : '' }}>
+                        Paksa: Berlangsung
+                    </option>
+
+                    <option value="Selesai"
+                        {{ old('status', $kegiatan->status) == 'Selesai' ? 'selected' : '' }}>
+                        Paksa: Selesai
                     </option>
 
                 </select>
+                <small class="text-muted">Biarkan kosong jika ingin status berjalan otomatis sesuai waktu.</small>
 
             </div>
 

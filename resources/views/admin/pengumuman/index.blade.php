@@ -27,17 +27,42 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
+                        <th>Thumbnail</th>
                         <th>Judul</th>
+                        <th>Isi Ringkas</th>
                         <th>Tanggal</th>
+                        <th>Status</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($pengumuman as $index => $item)
+                    @forelse($pengumumans as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
+                        <td>
+                            @if($item->gambar)
+                                @php $extension = strtolower(pathinfo($item->gambar, PATHINFO_EXTENSION)); @endphp
+                                @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="Thumbnail" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
+                                    <div class="bg-dark text-white rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="File Video">
+                                        <i class="bi bi-play-fill fs-5"></i>
+                                    </div>
+                                @endif
+                            @else
+                                <span class="text-muted small fst-italic">Tidak ada</span>
+                            @endif
+                        </td>
                         <td class="fw-medium">{{ $item->judul }}</td>
-                        <td>{{ $item->created_at->format('d M Y') }}</td>
+                        <td style="max-width: 250px;">{{ Str::limit($item->isi, 50) }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                        <td>
+                            @if(isset($item->status) && strtolower($item->status) === 'publish')
+                                <span class="badge bg-success">Publish</span>
+                            @else
+                                <span class="badge bg-secondary">Draft</span>
+                            @endif
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.pengumuman.edit', $item->id) }}" class="btn btn-sm btn-warning text-white" title="Edit">
@@ -55,7 +80,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="text-center py-4 text-muted">
+                        <td colspan="7" class="text-center py-4 text-muted">
                             <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                             Belum ada data pengumuman.
                         </td>

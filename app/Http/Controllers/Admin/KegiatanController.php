@@ -23,11 +23,12 @@ class KegiatanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_kegiatan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'waktu' => 'required',
-            'lokasi' => 'required|string|max:255',
-            'status' => 'required|in:akan datang,selesai',
+            'nama_kegiatan'     => 'required|string|max:255',
+            'tanggal'           => 'required|date',
+            'waktu_pelaksanaan' => 'required',
+            'jam_selesai'       => 'nullable',
+            'lokasi'            => 'required|string|max:255',
+            'status'            => 'nullable|string|in:Mendatang,Berlangsung,Selesai',
         ]);
 
         Kegiatan::create($validated);
@@ -45,12 +46,18 @@ class KegiatanController extends Controller
     public function update(Request $request, Kegiatan $kegiatan)
     {
         $validated = $request->validate([
-            'nama_kegiatan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'waktu' => 'required',
-            'lokasi' => 'required|string|max:255',
-            'status' => 'required|in:akan datang,selesai',
+            'nama_kegiatan'     => 'required|string|max:255',
+            'tanggal'           => 'required|date',
+            'waktu_pelaksanaan' => 'required',
+            'jam_selesai'       => 'nullable',
+            'lokasi'            => 'required|string|max:255',
+            'status'            => 'nullable|string|in:Mendatang,Berlangsung,Selesai',
         ]);
+
+        // Tangani jika status dikosongkan agar tersimpan sebagai null di database
+        if (empty($validated['status'])) {
+            $validated['status'] = null;
+        }
 
         $kegiatan->update($validated);
 

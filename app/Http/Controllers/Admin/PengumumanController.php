@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pengumuman;
 use Illuminate\Http\Request;
+use App\Models\Pengumuman;
+use Illuminate\Support\Facades\Storage;
 
 class PengumumanController extends Controller
 {
     public function index()
     {
-        $pengumuman = Pengumuman::latest()->get();
-
-        return view('admin.pengumuman.index', compact('pengumuman'));
+        $pengumumans = Pengumuman::latest()->get();
+        return view('admin.pengumuman.index', compact('pengumumans'));
     }
 
     public function create()
@@ -22,17 +22,28 @@ class PengumumanController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
+        $request->validate([
+            'judul'   => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'status' => 'required|in:aktif,tidak aktif',
+            'isi'     => 'nullable|string',
+            'gambar'  => 'nullable|file|mimes:jpg,jpeg,png,webp,mp4|max:2048',
         ]);
 
-        Pengumuman::create($validated);
+        $path = null;
+        if ($request->hasFile('gambar')) {
+            $path = $request->file('gambar')->store('pengumuman', 'public');
+        }
 
-        return redirect()
-            ->route('admin.pengumuman.index')
-            ->with('success', 'Pengumuman berhasil ditambahkan.');
+        Pengumuman::create([
+            'judul'   => $request->judul,
+            'tanggal' => $request->tanggal,
+            'isi'     => $request->isi,
+            'gambar'  => $path,
+            'status'  => 'publish', // Otomatis publish saat dibuat baru
+        ]);
+
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil ditambahkan dan langsung dipublish!');
     }
 
     public function edit(Pengumuman $pengumuman)
@@ -42,25 +53,43 @@ class PengumumanController extends Controller
 
     public function update(Request $request, Pengumuman $pengumuman)
     {
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
+        $request->validate([
+            'judul'   => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'status' => 'required|in:aktif,tidak aktif',
+            'status'  => 'required|in:publish,draft',
+            'isi'     => 'nullable|string',
+            'gambar'  => 'nullable|file|mimes:jpg,jpeg,png,webp,mp4|max:2048',
         ]);
 
-        $pengumuman->update($validated);
+        $path = $pengumuman->gambar;
+        if ($request->hasFile('gambar')) {
+            if ($path && Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+            $path = $request->file('gambar')->store('pengumuman', 'public');
+        }
 
-        return redirect()
-            ->route('admin.pengumuman.index')
-            ->with('success', 'Pengumuman berhasil diperbarui.');
+        $pengumuman->update([
+            'judul'   => $request->judul,
+            'tanggal' => $request->tanggal,
+            'isi'     => $request->isi,
+            'gambar'  => $path,
+            'status'  => $request->status,
+        ]);
+
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil diperbarui!');
     }
 
     public function destroy(Pengumuman $pengumuman)
     {
+        if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
+            Storage::disk('public')->delete($pengumuman->gambar);
+        }
+
         $pengumuman->delete();
 
-        return redirect()
-            ->route('admin.pengumuman.index')
-            ->with('success', 'Pengumuman berhasil dihapus.');
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil dihapus!');
     }
 }

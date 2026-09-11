@@ -38,6 +38,8 @@ class WargaController extends Controller
             'name' => $request->name,
             'nik' => $request->nik,
             'username' => $request->username,
+            // Solusi error: membuat email otomatis karena DB meminta kolom email
+            'email' => $request->username . '@warga.sirta', 
             'password' => Hash::make($request->password),
             'role' => 'warga',
             'no_hp' => $request->no_hp,
@@ -67,6 +69,8 @@ class WargaController extends Controller
             'name' => $request->name,
             'nik' => $request->nik,
             'username' => $request->username,
+            // Update juga email dummy-nya jika username diubah
+            'email' => $request->username . '@warga.sirta',
             'no_hp' => $request->no_hp,
         ];
 

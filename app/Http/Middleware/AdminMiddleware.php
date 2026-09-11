@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
@@ -13,14 +14,18 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        // 1. Cek apakah user sudah login
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Anda tidak memiliki akses.');
+        // 2. Cek apakah role user adalah 'admin'
+        if (Auth::user()->role === 'admin') {
+            return $next($request); // Loloskan
         }
 
-        return $next($request);
+        // 3. Jika login tapi BUKAN admin (misal: warga), lempar error 403
+        // Atau kamu bisa ganti abort(403) ini jadi: return redirect()->route('warga.dashboard');
+        abort(403, 'Anda tidak memiliki akses admin.');
     }
 }

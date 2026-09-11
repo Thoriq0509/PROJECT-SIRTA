@@ -73,7 +73,7 @@
                     <th>No</th>
                     <th>Nama Kegiatan</th>
                     <th>Tanggal</th>
-                    <th>Waktu</th>
+                    <th>Waktu Pelaksanaan</th>
                     <th>Lokasi</th>
                     <th>Status</th>
                     <th>Aksi</th>
@@ -101,7 +101,7 @@
                         </td>
 
                         <td>
-                            {{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }}
+                            {{ $item->waktu_pelaksanaan }} {{ $item->jam_selesai ? '- ' . $item->jam_selesai : '' }}
                         </td>
 
                         <td>
@@ -109,21 +109,23 @@
                         </td>
 
                         <td>
+                            @php
+                                $statusFinal = $item->status_final;
+                            @endphp
 
-                            @if($item->status === 'akan datang')
-
-                                <span class="badge bg-primary">
-                                    Akan Datang
+                            @if($statusFinal == 'Berlangsung')
+                                <span class="badge bg-success">
+                                    Berlangsung
                                 </span>
-
+                            @elseif($statusFinal == 'Mendatang')
+                                <span class="badge bg-warning text-dark">
+                                    Mendatang
+                                </span>
                             @else
-
                                 <span class="badge bg-secondary">
                                     Selesai
                                 </span>
-
                             @endif
-
                         </td>
 
                         <td>

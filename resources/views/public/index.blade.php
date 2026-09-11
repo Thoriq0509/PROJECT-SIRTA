@@ -73,7 +73,7 @@
                         Sistem Informasi RT Kampung Tarate
                     </span>
                     <h1 class="display-5 fw-bold mb-3">Selamat Datang di Portal Warga SIRTA</h1>
-                    <p class="lead text-secondary mb-4">
+                    <p class="lead text-white mb-4">
                         Pusat informasi kegiatan lingkungan, transparansi data pengurus, galeri dokumentasi,
                         dan layanan pengaduan warga Kampung Tarate yang cepat dan transparan.
                     </p>
@@ -103,30 +103,43 @@
             <h3 class="section-title fw-bold mb-4">Pengumuman & Informasi</h3>
             
             @php
-                // Filter: Status 'publish' dan Tanggal belum lewat (>= hari ini)
+                // Filter: Hanya menampilkan pengumuman yang statusnya 'publish'
                 $activePengumuman = collect($pengumuman)->filter(function($item) {
-                    $isPublish = isset($item->status) && strtolower($item->status) === 'publish';
-                    $isNotExpired = \Carbon\Carbon::parse($item->tanggal)->endOfDay()->isFuture();
-                    return $isPublish && $isNotExpired;
+                    return isset($item->status) && strtolower($item->status) === 'publish';
                 })->values();
             @endphp
 
             <div class="row g-4">
                 @forelse($activePengumuman->take(4) as $item)
                     <div class="col-md-6">
-                        <div class="card card-custom p-4 h-100 border-start border-4 border-primary shadow-sm">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">Informasi</span>
-                                <small class="text-muted"><i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</small>
-                            </div>
-                            <h5 class="fw-bold mb-2">{{ $item->judul }}</h5>
-                            @if(isset($item->isi))
-                                <p class="text-secondary small mb-0">{{ $item->isi }}</p>
+                        <div class="card card-custom h-100 border-0 shadow-sm overflow-hidden">
+                            
+                            {{-- THUMBNAIL GAMBAR / VIDEO DI BAGIAN ATAS CARD (OPSIONAL) --}}
+                            @if($item->gambar)
+                                @php $extension = strtolower(pathinfo($item->gambar, PATHINFO_EXTENSION)); @endphp
+                                @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" class="card-img-top" alt="{{ $item->judul }}" style="height: 200px; object-fit: cover;">
+                                @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
+                                    <video class="w-100" style="height: 200px; object-fit: cover;" controls>
+                                        <source src="{{ asset('storage/' . $item->gambar) }}">
+                                    </video>
+                                @endif
                             @endif
+
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">Informasi</span>
+                                    <small class="text-muted"><i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</small>
+                                </div>
+                                <h5 class="fw-bold mb-2 text-dark">{{ $item->judul }}</h5>
+                                @if(isset($item->isi))
+                                    <p class="text-secondary small mb-0">{{ $item->isi }}</p>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="col-12"><div class="card p-4 text-center"><p class="text-muted mb-0">Belum ada pengumuman aktif saat ini.</p></div></div>
+                    <div class="col-12"><div class="card p-4 text-center"><p class="text-muted mb-0">Belum ada pengumuman publish saat ini.</p></div></div>
                 @endforelse
             </div>
 
@@ -135,15 +148,29 @@
                     <div class="row g-4 mt-1">
                         @foreach($activePengumuman->skip(4) as $item)
                             <div class="col-md-6">
-                                <div class="card card-custom p-4 h-100 border-start border-4 border-primary shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">Informasi</span>
-                                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</small>
-                                    </div>
-                                    <h5 class="fw-bold mb-2">{{ $item->judul }}</h5>
-                                    @if(isset($item->isi))
-                                        <p class="text-secondary small mb-0">{{ $item->isi }}</p>
+                                <div class="card card-custom h-100 border-0 shadow-sm overflow-hidden">
+                                    
+                                    @if($item->gambar)
+                                        @php $extension = strtolower(pathinfo($item->gambar, PATHINFO_EXTENSION)); @endphp
+                                        @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                            <img src="{{ asset('storage/' . $item->gambar) }}" class="card-img-top" alt="{{ $item->judul }}" style="height: 200px; object-fit: cover;">
+                                        @elseif(in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
+                                            <video class="w-100" style="height: 200px; object-fit: cover;" controls>
+                                                <source src="{{ asset('storage/' . $item->gambar) }}">
+                                            </video>
+                                        @endif
                                     @endif
+
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">Informasi</span>
+                                            <small class="text-muted"><i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</small>
+                                        </div>
+                                        <h5 class="fw-bold mb-2 text-dark">{{ $item->judul }}</h5>
+                                        @if(isset($item->isi))
+                                            <p class="text-secondary small mb-0">{{ $item->isi }}</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -165,11 +192,10 @@
             <h3 class="section-title fw-bold mb-4">Jadwal Kegiatan Warga</h3>
 
             @php
-                // Filter: Status 'publish' dan Tanggal belum lewat (>= hari ini)
+                // Filter: Hanya menampilkan kegiatan yang status finalnya BUKAN 'Selesai' 
+                // (Mendukung otomatis maupun override paksa oleh admin)
                 $activeKegiatan = collect($kegiatan)->filter(function($item) {
-                    $isPublish = isset($item->status) && strtolower($item->status) === 'publish';
-                    $isNotExpired = \Carbon\Carbon::parse($item->tanggal)->endOfDay()->isFuture();
-                    return $isPublish && $isNotExpired;
+                    return isset($item->status_final) && strtolower($item->status_final) !== 'selesai';
                 })->values();
             @endphp
 
@@ -180,8 +206,9 @@
                             <tr>
                                 <th>Agenda Kegiatan</th>
                                 <th>Tanggal</th>
-                                <th>Waktu</th>
+                                <th>Waktu Pelaksanaan</th>
                                 <th>Lokasi</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         
@@ -190,11 +217,19 @@
                                 <tr>
                                     <td class="fw-bold text-primary">{{ $item->nama_kegiatan }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }} WIB</td>
+                                    <td>{{ $item->waktu_pelaksanaan }} {{ $item->jam_selesai ? '- ' . $item->jam_selesai : '' }} WIB</td>
                                     <td>{{ $item->lokasi }}</td>
+                                    <td>
+                                        @php $status = $item->status_final; @endphp
+                                        @if($status == 'Berlangsung')
+                                            <span class="badge bg-success">Berlangsung</span>
+                                        @else
+                                            <span class="badge bg-warning text-dark">Mendatang</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="4" class="text-center text-muted py-3">Belum ada jadwal kegiatan aktif.</td></tr>
+                                <tr><td colspan="5" class="text-center text-muted py-3">Belum ada jadwal kegiatan aktif saat ini.</td></tr>
                             @endforelse
                         </tbody>
 
@@ -204,8 +239,16 @@
                                     <tr>
                                         <td class="fw-bold text-primary">{{ $item->nama_kegiatan }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d F Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }} WIB</td>
+                                        <td>{{ $item->waktu_pelaksanaan }} {{ $item->jam_selesai ? '- ' . $item->jam_selesai : '' }} WIB</td>
                                         <td>{{ $item->lokasi }}</td>
+                                        <td>
+                                            @php $status = $item->status_final; @endphp
+                                            @if($status == 'Berlangsung')
+                                                <span class="badge bg-success">Berlangsung</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark">Mendatang</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

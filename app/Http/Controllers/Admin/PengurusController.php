@@ -27,8 +27,13 @@ class PengurusController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'jabatan' => 'required|string|max:255',
             'nama_pengurus' => 'required|string|max:255',
-            'no_telepon' => 'nullable|string|max:20', // Diubah menjadi nullable
+            'no_telepon' => 'nullable|string|max:20',
         ]);
+
+        // Tangani jika no_telepon kosong agar tersimpan sebagai null di database
+        if (empty($validated['no_telepon'])) {
+            $validated['no_telepon'] = null;
+        }
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('pengurus', 'public');
@@ -52,8 +57,13 @@ class PengurusController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'jabatan' => 'required|string|max:255',
             'nama_pengurus' => 'required|string|max:255',
-            'no_telepon' => 'nullable|string|max:20', // Diubah menjadi nullable
+            'no_telepon' => 'nullable|string|max:20',
         ]);
+
+        // Tangani jika no_telepon kosong agar tersimpan sebagai null di database
+        if (empty($validated['no_telepon'])) {
+            $validated['no_telepon'] = null;
+        }
 
         if ($request->hasFile('foto')) {
 

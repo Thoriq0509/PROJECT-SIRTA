@@ -27,7 +27,8 @@
         Form Pengumuman
     </div>
 
-    <form action="{{ route('admin.pengumuman.store') }}" method="POST">
+    <!-- PENTING: enctype wajib ada untuk upload file -->
+    <form action="{{ route('admin.pengumuman.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- JUDUL -->
@@ -61,33 +62,32 @@
             >
         </div>
 
-        <!-- STATUS -->
-        <div class="mb-4">
-            <label for="status" class="form-label">
-                Status
+        <!-- ISI PENGUMUMAN -->
+        <div class="mb-3">
+            <label for="isi" class="form-label">
+                Isi Pengumuman
             </label>
-            <select
-                name="status"
-                id="status"
-                class="form-select"
-                required
+            <textarea
+                name="isi"
+                id="isi"
+                rows="4"
+                class="form-control"
+                placeholder="Tulis isi pengumuman di sini..."
+            >{{ old('isi') }}</textarea>
+        </div>
+
+        <!-- GAMBAR / THUMBNAIL (OPSIONAL) -->
+        <div class="mb-4">
+            <label for="gambar" class="form-label">
+                Gambar / Thumbnail (Opsional)
+            </label>
+            <input
+                type="file"
+                name="gambar"
+                id="gambar"
+                class="form-control"
             >
-                <option value="">
-                    Pilih Status
-                </option>
-                <option
-                    value="aktif"
-                    {{ old('status') == 'aktif' ? 'selected' : '' }}
-                >
-                    Aktif
-                </option>
-                <option
-                    value="tidak aktif"
-                    {{ old('status') == 'tidak aktif' ? 'selected' : '' }}
-                >
-                    Tidak Aktif
-                </option>
-            </select>
+            <small class="text-muted">Format yang didukung: JPG, JPEG, PNG, WEBP, MP4 (Maks. 2MB)</small>
         </div>
 
         <!-- BUTTON -->

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->date('tanggal');
-            $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');
+            $table->string('status')->default('publish');
             $table->timestamps();
         });
     }
